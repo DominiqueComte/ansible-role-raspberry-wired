@@ -1,4 +1,4 @@
-Role Name
+Raspberry Wired
 =========
 
 This role disables WiFi and Bluetoth on a Raspberry Pi.
