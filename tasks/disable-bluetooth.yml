@@ -1,0 +1,46 @@
+---
+
+- name: Get the list of services
+  service_facts:
+
+- name: Disable bluetooth service
+  systemd:
+    name: bluetooth
+    enabled: no
+    state: stopped
+  tags:
+    - bluetooth
+  when: "'bluetooth.service' in services"
+
+- name: Disable HCIUART service
+  systemd:
+    name: hciuart
+    enabled: no
+    state: stopped
+  tags:
+    - bluetooth
+  when: "'hciuart.service' in services"
+
+- name: Disable BlueAlsa service
+  systemd:
+    name: bluealsa
+    enabled: no
+    state: stopped
+  tags:
+    - bluetooth
+  when: "'bluealsa.service' in services"
+
+- name: disable bluetooth in raspberry boot config
+  lineinfile:
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-bt'
+    state: present
+  notify:
+    - reboot-host
+
+- name: uninstall bluez
+  apt:
+    name: bluez
+    state: absent
+    autoremove: yes
+    purge: yes

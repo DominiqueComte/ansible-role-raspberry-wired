@@ -1,0 +1,10 @@
+---
+# tasks file for ansible-role-raspberry-wired
+
+- import_tasks: disable-wifi.yml
+  tags:
+  - wifi
+
+- import_tasks: disable-bluetooth.yml
+  tags:
+  - bluetooth
