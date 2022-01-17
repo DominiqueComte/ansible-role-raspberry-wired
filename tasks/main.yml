@@ -1,10 +1,72 @@
 ---
-# tasks file for ansible-role-raspberry-wired
+# tasks file for raspberrypi_wired
 
-- import_tasks: disable-wifi.yml
+- name: Get the list of services
+  service_facts:
+
+- name: Disable WiFi in raspberry boot config
+  lineinfile:
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-wifi'
+    state: present
+  notify:
+    - reboot-host
   tags:
   - wifi
 
-- import_tasks: disable-bluetooth.yml
+- name: disable WPA Supplicant service
+  systemd:
+    name: wpa_supplicant
+    enabled: false
+    masked: true
+  when: "'wpa_supplicant.service' in services"
+  notify:
+    - reboot-host
+  tags:
+  - wifi
+
+- name: Disable bluetooth service
+  systemd:
+    name: bluetooth
+    enabled: no
+    state: stopped
+  when: "'bluetooth.service' in services"
+  tags:
+    - bluetooth
+
+- name: Disable HCIUART service
+  systemd:
+    name: hciuart
+    enabled: no
+    state: stopped
+  when: "'hciuart.service' in services"
+  tags:
+    - bluetooth
+
+- name: Disable BlueAlsa service
+  systemd:
+    name: bluealsa
+    enabled: no
+    state: stopped
+  when: "'bluealsa.service' in services"
+  tags:
+    - bluetooth
+
+- name: disable bluetooth in raspberry boot config
+  lineinfile:
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-bt'
+    state: present
+  notify:
+    - reboot-host
+  tags:
+  - bluetooth
+
+- name: uninstall bluez
+  apt:
+    name: bluez
+    state: absent
+    autoremove: yes
+    purge: yes
   tags:
   - bluetooth

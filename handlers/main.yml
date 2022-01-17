@@ -1,4 +1,4 @@
 ---
-# handlers file for ansible-role-raspberry-wired
+# handlers file for raspberrypi_wired
 - name: reboot-host
   reboot:

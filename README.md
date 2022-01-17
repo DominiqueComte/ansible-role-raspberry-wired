@@ -23,7 +23,7 @@ Example Playbook
 
   - hosts: all
     roles:
-    - ansible-role-raspberry-wired
+    - raspberrypi_wired
 
 License
 -------
